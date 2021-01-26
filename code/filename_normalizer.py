@@ -1,7 +1,7 @@
 # This script normalize the filename of RGB images
 import os
 
-path = input('please enter file path with / at the end: ')
+path = input('please enter file path: ')
 
 fileList = os.listdir(path)
 
