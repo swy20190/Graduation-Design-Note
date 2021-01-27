@@ -1,14 +1,28 @@
 # This script normalize the filename of RGB images
 import os
 
-path = input('please enter file path: ')
+ADLPath = input('please enter ADL file path: ')
 
-fileList = os.listdir(path)
+fileList = os.listdir(ADLPath)
 
 n = 0
 for i in fileList:
-    oldName = path + os.sep + fileList[n]
-    newName = path + os.sep + 'ADL_'+str(n+1)+'.png'
-    os.rename(oldName, newName)
+    oldName = ADLPath + os.sep + fileList[n]
+    newName = ADLPath + os.sep + 'ADL_'+str(n+1)+'.png'
+    if oldName != newName:
+        os.rename(oldName, newName)
+    print(oldName, '=====>', newName)
+    n += 1
+
+FallPath = input('please enter fall file path: ')
+
+fileList = os.listdir(FallPath)
+
+n = 0
+for i in fileList:
+    oldName = FallPath + os.sep + fileList[n]
+    newName = FallPath + os.sep + "fall_" + str(n+1) + '.png'
+    if oldName != newName:
+        os.rename(oldName, newName)
     print(oldName, '=====>', newName)
     n += 1
