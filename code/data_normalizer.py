@@ -77,3 +77,10 @@ def normalize(srcName, targetName, mode):
 
 normalize("data/ADLPure.csv", "data/normalized/ADLNormAngle.csv", mode="angle")
 normalize("data/ADLPure.csv", "data/normalized/ADLNormThigh.csv", mode="thigh_length")
+normalize("data/ADLPure.csv", "data/normalized/ADLNormTorso.csv", mode="torso_box")
+normalize("data/ADLPure.csv", "data/normalized/ADLNormNone.csv", mode="none")
+
+normalize("data/FallPure.csv", "data/normalized/FallNormAngle.csv", mode="angle")
+normalize("data/FallPure.csv", "data/normalized/FallNormThigh.csv", mode="thigh_length")
+normalize("data/FallPure.csv", "data/normalized/FallNormTorso.csv", mode="torso_box")
+normalize("data/FallPure.csv", "data/normalized/FallNormNone.csv", mode="none")
