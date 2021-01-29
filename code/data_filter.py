@@ -28,6 +28,9 @@ def pure(srcName, targetName):
             pass
         else:
             pureLine = line[0:28]
+            if isnan(pureLine[0]):
+                pureLine[0] = pureLine[2]
+                pureLine[1] = pureLine[3]
             if isnan(pureLine[4]):
                 pureLine[4] = pureLine[10]
                 pureLine[5] = pureLine[11]
@@ -53,6 +56,7 @@ def pure(srcName, targetName):
                                                  '11y', '12x', '12y', '13x', '13y'])
     # 使用纵向前值代替nan
     filledDf = filledDf.fillna(axis=0, method='ffill')
+    filledDf = filledDf.fillna(value=-999)
     filledDf.drop_duplicates(inplace=True)
     filledDf.to_csv(targetName)
 
