@@ -1,0 +1,28 @@
+digraph Tree {
+node [shape=box] ;
+0 [label="aspect ratio <= 0.878\nentropy = 0.567\nsamples = 1190\nvalue = [1031, 159]\nclass = ADL"] ;
+1 [label="angle of left thigh <= -39.871\nentropy = 0.187\nsamples = 982\nvalue = [954, 28]\nclass = ADL"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="entropy = 0.0\nsamples = 4\nvalue = [0, 4]\nclass = Fall"] ;
+1 -> 2 ;
+3 [label="aspect ratio <= 0.523\nentropy = 0.166\nsamples = 978\nvalue = [954, 24]\nclass = ADL"] ;
+1 -> 3 ;
+4 [label="entropy = 0.081\nsamples = 698\nvalue = [691, 7]\nclass = ADL"] ;
+3 -> 4 ;
+5 [label="entropy = 0.33\nsamples = 280\nvalue = [263, 17]\nclass = ADL"] ;
+3 -> 5 ;
+6 [label="angle of right thigh <= -26.017\nentropy = 0.951\nsamples = 208\nvalue = [77, 131]\nclass = Fall"] ;
+0 -> 6 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+7 [label="angle of left thigh <= -75.128\nentropy = 0.889\nsamples = 98\nvalue = [68, 30]\nclass = ADL"] ;
+6 -> 7 ;
+8 [label="entropy = 0.353\nsamples = 15\nvalue = [1, 14]\nclass = Fall"] ;
+7 -> 8 ;
+9 [label="entropy = 0.707\nsamples = 83\nvalue = [67, 16]\nclass = ADL"] ;
+7 -> 9 ;
+10 [label="aspect ratio <= 0.943\nentropy = 0.409\nsamples = 110\nvalue = [9, 101]\nclass = Fall"] ;
+6 -> 10 ;
+11 [label="entropy = 0.918\nsamples = 18\nvalue = [6, 12]\nclass = Fall"] ;
+10 -> 11 ;
+12 [label="entropy = 0.207\nsamples = 92\nvalue = [3, 89]\nclass = Fall"] ;
+10 -> 12 ;
+}
