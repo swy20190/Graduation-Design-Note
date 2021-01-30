@@ -3,6 +3,7 @@ import graphviz
 import numpy as np
 import pandas as pd
 from sklearn import tree
+from sklearn.utils import shuffle
 from sklearn import preprocessing
 from sklearn.model_selection import cross_val_score
 
@@ -29,5 +30,18 @@ for i in range(false_num):
 for i in range(true_num):
     trainingLabel.append(1)
 
+# shuffle the data set
+featureDf = pd.DataFrame(trainingSet, columns=['ratio', 'LAngle', 'RAngle'])
+featureDf['Label'] = trainingLabel
+shuffledDf = shuffle(featureDf)
+
+# shuffled set
+trainingSet = shuffledDf[['ratio', 'LAngle', 'RAngle']]
+trainingLabel = shuffledDf['Label']
+
 tree_RAngle_d3 = tree.DecisionTreeClassifier(criterion="entropy", max_depth=3)
 tree_RAngle_d3 = tree_RAngle_d3.fit(trainingSet, trainingLabel)
+
+# 10-fold cross validation
+scores_tree_RAngle_d3 = cross_val_score(tree_RAngle_d3, trainingSet, trainingLabel, cv=10)
+print(scores_tree_RAngle_d3)
