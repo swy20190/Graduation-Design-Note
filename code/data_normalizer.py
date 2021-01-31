@@ -42,31 +42,37 @@ def normalize(srcName, targetName, mode):
             if mode == "thigh_len":
                 # the length of right thigh
                 thigh = math.sqrt((line[16]-line[18])**2 + (line[17]-line[19])**2)
+                centerX = line[2]
+                centerY = line[3]
                 for i in range(len(line)):
                     if i % 2 == 0:
-                        line[i] = (line[i]-line[2]) / thigh
+                        line[i] = (line[i]-centerX) / thigh
                     else:
-                        line[i] = (line[i]-line[3]) / thigh
+                        line[i] = (line[i]-centerY) / thigh
             elif mode == "torso_box":
                 # min_x, min_y, max_x, max_y of torso
                 min_x = min(line[4], line[10], line[16], line[18], line[22], line[24])
                 max_x = max(line[4], line[10], line[16], line[18], line[22], line[24])
                 min_y = min(line[5], line[11], line[17], line[19], line[23], line[25])
                 max_y = max(line[5], line[11], line[17], line[19], line[23], line[25])
+                centerX = line[2]
+                centerY = line[3]
                 # calculate the normalize index
                 x_diff = max_x - min_x
                 y_diff = max_y - min_y
                 for i in range(len(line)):
                     if i % 2 == 0:
-                        line[i] = (line[i]-line[2]) / x_diff
+                        line[i] = (line[i]-centerX) / x_diff
                     else:
-                        line[i] = (line[i]-line[3]) / y_diff
+                        line[i] = (line[i]-centerY) / y_diff
             elif mode == "none":
+                centerX = line[2]
+                centerY = line[3]
                 for i in range(len(line)):
                     if i % 2 == 0:
-                        line[i] = line[i] - line[2]
+                        line[i] = line[i] - centerX
                     else:
-                        line[i] = line[i] - line[3]
+                        line[i] = line[i] - centerY
             dataNormList.append(line)
 
         dataNormDf = pd.DataFrame(dataNormList, columns=['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '4x', '4y',
@@ -76,11 +82,11 @@ def normalize(srcName, targetName, mode):
 
 
 normalize("data/ADLPure.csv", "data/normalized/ADLNormAngle.csv", mode="angle")
-normalize("data/ADLPure.csv", "data/normalized/ADLNormThigh.csv", mode="thigh_length")
+normalize("data/ADLPure.csv", "data/normalized/ADLNormThigh.csv", mode="thigh_len")
 normalize("data/ADLPure.csv", "data/normalized/ADLNormTorso.csv", mode="torso_box")
 normalize("data/ADLPure.csv", "data/normalized/ADLNormNone.csv", mode="none")
 
 normalize("data/FallPure.csv", "data/normalized/FallNormAngle.csv", mode="angle")
-normalize("data/FallPure.csv", "data/normalized/FallNormThigh.csv", mode="thigh_length")
+normalize("data/FallPure.csv", "data/normalized/FallNormThigh.csv", mode="thigh_len")
 normalize("data/FallPure.csv", "data/normalized/FallNormTorso.csv", mode="torso_box")
 normalize("data/FallPure.csv", "data/normalized/FallNormNone.csv", mode="none")
