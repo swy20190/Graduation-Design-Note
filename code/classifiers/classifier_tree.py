@@ -11,13 +11,13 @@ import os
 
 os.environ["PATH"] += os.pathsep + 'G:/stable_windows_10_msbuild_Release_Win32_graphviz-2.46.0-win32/Graphviz/bin'
 # generate the training set
-ADL_data = pd.read_csv("data/normalized/ADLNormAngle.csv", index_col=0)
+ADL_data = pd.read_csv("../data/normalized/ADLNormAngle.csv", index_col=0)
 ADL_training = ADL_data[['ratio', 'LAngle', 'RAngle']]
 ADL_training = np.array(ADL_training)
 ADL_training = ADL_training.tolist()
 false_num = len(ADL_training)
 
-Fall_data = pd.read_csv("data/normalized/FallNormAngle.csv", index_col=0)
+Fall_data = pd.read_csv("../data/normalized/FallNormAngle.csv", index_col=0)
 Fall_training = Fall_data[['ratio', 'LAngle', 'RAngle']]
 Fall_training = np.array(Fall_training)
 Fall_training = Fall_training.tolist()
@@ -61,4 +61,4 @@ tree_RAngle_d3_dot = tree.export_graphviz(
 
 graph = graphviz.Source(tree_RAngle_d3_dot)
 
-graph.render("output/TreeForRAngleD3")
+graph.render("../output/TreeForRAngleD3")
