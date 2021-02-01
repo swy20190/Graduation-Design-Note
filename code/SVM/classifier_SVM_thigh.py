@@ -1,4 +1,4 @@
-# This file classify the NormThigh data based on SVM
+# This file classify the normalized data based on SVM
 #  Nose – 0, Neck – 1, Right Shoulder – 2, Right Elbow – 3, Right Wrist – 4, Left Shoulder – 5, Left Elbow – 6,
 #  Left Wrist – 7, Right Hip – 8, Right Knee – 9, Right Ankle – 10, Left Hip – 11, Left Knee – 12, LAnkle – 13,
 import pandas as pd
@@ -13,87 +13,85 @@ from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 
 
-ADL_data = pd.read_csv("../data/normalized/ADLNormThigh.csv", index_col=0)
-# all the features are taken into consideration
-ADL_training = ADL_data
-ADL_training = np.array(ADL_training)
-ADL_training = ADL_training.tolist()
-# ADL_training = ADL_training[0:200]
-false_num = len(ADL_training)
+def SVC_classifier(ADLDataFile, FallDataFile, features=None, k='rbf', C=1.0):
+    """
 
-Fall_data = pd.read_csv("../data/normalized/FallNormThigh.csv", index_col=0)
-Fall_training = Fall_data
-Fall_training = np.array(Fall_training)
-Fall_training = Fall_training.tolist()
+    :param ADLDataFile: the normalized data of ADL
+    :param FallDataFile: the normalized data of fall
+    :param features: the key points chosen to train model
+    :param k: kernel of svc
+    :param C: the normalize index of svc
+    :return: cross validation score
+    """
+    # default: nose, neck, shoulders, hips, knees, elbows
+    if features is None:
+        features = ['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '5x', '5y', '6x', '6y', '8x', '8y', '9x', '9y',
+                    '11x', '11y', '12x', '12y']
 
-true_num = len(Fall_training)
+    # generate data set
+    ADL_data = pd.read_csv(ADLDataFile, index_col=0)
+    ADL_training = ADL_data
+    ADL_training = np.array(ADL_training)
+    ADL_training = ADL_training.tolist()
+    false_num = len(ADL_training)
 
-trainingSet = ADL_training + Fall_training
+    Fall_data = pd.read_csv(FallDataFile, index_col=0)
+    Fall_training = Fall_data
+    Fall_training = np.array(Fall_training)
+    Fall_training = Fall_training.tolist()
+    true_num = len(Fall_training)
 
-# generate the training label
-trainingLabel = []
+    trainingSet = ADL_training + Fall_training
 
-for i in range(false_num):
-    trainingLabel.append(0)
-for i in range(true_num):
-    trainingLabel.append(1)
+    # generate labels
+    trainingLabel = []
+    for i in range(false_num):
+        trainingLabel.append(0)
+    for i in range(true_num):
+        trainingLabel.append(1)
 
-# shuffle the dataset
-featureDf = pd.DataFrame(trainingSet, columns=['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '4x', '4y', '5x', '5y',
-                                               '6x', '6y', '7x', '7y', '8x', '8y', '9x', '9y', '10x', '10y', '11x',
-                                               '11y', '12x', '12y', '13x', '13y'])
+    featureDf = pd.DataFrame(trainingSet, columns=['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '4x', '4y', '5x',
+                                                   '5y', '6x', '6y', '7x', '7y', '8x', '8y', '9x', '9y', '10x', '10y',
+                                                   '11x', '11y', '12x', '12y', '13x', '13y'])
+    featureDf['Label'] = trainingLabel
+    # shuffle
+    shuffledTrainingDf = shuffle(featureDf)
 
-featureDf['Label'] = trainingLabel
-shuffledTrainingDf = shuffle(featureDf)
+    # select features
+    trainingSet = shuffledTrainingDf[features]
 
+    # convert label vector to one-dimension array
+    trainingLabelVec = np.array(shuffledTrainingDf[['Label']]).tolist()
+    trainingLabel = []
+    for line in trainingLabelVec:
+        trainingLabel.append(line[0])
 
-# shuffled set
-trainingSet = shuffledTrainingDf[['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '4x', '4y', '5x', '5y', '6x', '6y',
-                                 '7x', '7y', '8x', '8y', '9x', '9y', '10x', '10y', '11x', '11y', '12x', '12y', '13x',
-                                  '13y']]
+    # SVM with rbf kernel
+    svc_classifier = svm.SVC(C=C, kernel='rbf')
+    svc_classifier.fit(trainingSet, trainingLabel)
+    scores_svc_classifier = cross_val_score(svc_classifier, trainingSet, trainingLabel, cv=10)
 
-trainingSet = trainingSet[['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '5x', '5y', '6x', '6y', '8x', '8y', '9x',
-                           '9y', '11x', '11y', '12x', '12y']]
-
-trainingLabelVec = np.array(shuffledTrainingDf[['Label']]).tolist()
-trainingLabel = []
-for line in trainingLabelVec:
-    trainingLabel.append(line[0])
-
-# SVM with RBF kernel
-for i in range(10):
-    svc_thigh = svm.SVC(C=0.1*(i+1), kernel='rbf')
-    svc_thigh.fit(trainingSet, trainingLabel)
-    scores_svc_thigh = cross_val_score(svc_thigh, trainingSet, trainingLabel, cv=10)
-    print("SVC RBF kernel C=" + str(0.1*(i+1)) + ":\n")
-    print(scores_svc_thigh)
-
-# draw ROC curve
-# C=1, kernel=rbf
-svc_thigh = svm.SVC()
+    return scores_svc_classifier
 
 
-thigh_train, thigh_test, L_train, L_test = train_test_split(trainingSet, trainingLabel, test_size=.5)
-L_score = svc_thigh.fit(thigh_train, L_train).decision_function(thigh_test)
+scores_thigh = SVC_classifier("../data/normalized/ADLNormThigh.csv", "../data/normalized/FallNormThigh.csv")
+print(scores_thigh)
 
-# tp = 0
-# t = 0
-# for i in range(len(L_score)):
-#     if L_test[i] == 1:
-#         tp += 1
-#         if L_score[i] == 1:
-#             t += 1
+# svc_thigh = svm.SVC()
 #
-# print(t)
-# print(tp)
-
-fpr, tpr, thresholds = roc_curve(L_test, L_score)
-
-plt.plot(fpr, tpr)
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.0])
-plt.title('ROC curve for diabetes classifier')
-plt.xlabel('False Positive Rate (1 - Specificity)')
-plt.ylabel('True Positive Rate (Sensitivity)')
-plt.grid(True)
-plt.show()
+#
+# thigh_train, thigh_test, L_train, L_test = train_test_split(trainingSet, trainingLabel, test_size=.5)
+# L_score = svc_thigh.fit(thigh_train, L_train).decision_function(thigh_test)
+#
+#
+#
+# fpr, tpr, thresholds = roc_curve(L_test, L_score)
+#
+# plt.plot(fpr, tpr)
+# plt.xlim([0.0, 1.0])
+# plt.ylim([0.0, 1.0])
+# plt.title('ROC curve for diabetes classifier')
+# plt.xlabel('False Positive Rate (1 - Specificity)')
+# plt.ylabel('True Positive Rate (Sensitivity)')
+# plt.grid(True)
+# plt.show()
