@@ -76,6 +76,10 @@ def SVC_classifier(ADLDataFile, FallDataFile, features=None, k='rbf', C=1.0):
 
 scores_thigh = SVC_classifier("../data/normalized/ADLNormThigh.csv", "../data/normalized/FallNormThigh.csv")
 print(scores_thigh)
+scores_torso = SVC_classifier("../data/normalized/ADLNormTorso.csv", "../data/normalized/FallNormTorso.csv")
+print(scores_torso)
+scores_none = SVC_classifier("../data/normalized/ADLNormNone.csv", "../data/normalized/FallNormNone.csv")
+print(scores_none)
 
 # svc_thigh = svm.SVC()
 #
