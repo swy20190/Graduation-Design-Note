@@ -42,6 +42,8 @@ def normalize(srcName, targetName, mode):
             if mode == "thigh_len":
                 # the length of right thigh
                 thigh = math.sqrt((line[16]-line[18])**2 + (line[17]-line[19])**2)
+                if thigh == 0:
+                    thigh = 0.01
                 centerX = line[2]
                 centerY = line[3]
                 for i in range(len(line)):
@@ -60,6 +62,10 @@ def normalize(srcName, targetName, mode):
                 # calculate the normalize index
                 x_diff = max_x - min_x
                 y_diff = max_y - min_y
+                if x_diff == 0:
+                    x_diff = 0.01
+                if y_diff == 0:
+                    y_diff = 0.01
                 for i in range(len(line)):
                     if i % 2 == 0:
                         line[i] = (line[i]-centerX) / x_diff
@@ -90,3 +96,13 @@ normalize("data/FallPure.csv", "data/normalized/FallNormAngle.csv", mode="angle"
 normalize("data/FallPure.csv", "data/normalized/FallNormThigh.csv", mode="thigh_len")
 normalize("data/FallPure.csv", "data/normalized/FallNormTorso.csv", mode="torso_box")
 normalize("data/FallPure.csv", "data/normalized/FallNormNone.csv", mode="none")
+
+normalize("data/ADLPureTest.csv", "data/normalized/ADLNormAngleTest.csv", mode="angle")
+normalize("data/ADLPureTest.csv", "data/normalized/ADLNormThighTest.csv", mode="thigh_len")
+normalize("data/ADLPureTest.csv", "data/normalized/ADLNormTorsoTest.csv", mode="torso_box")
+normalize("data/ADLPureTest.csv", "data/normalized/ADLNormNoneTest.csv", mode="none")
+
+normalize("data/FallPureTest.csv", "data/normalized/FallNormAngleTest.csv", mode="angle")
+normalize("data/FallPureTest.csv", "data/normalized/FallNormThighTest.csv", mode="thigh_len")
+normalize("data/FallPureTest.csv", "data/normalized/FallNormTorsoTest.csv", mode="torso_box")
+normalize("data/FallPureTest.csv", "data/normalized/FallNormNoneTest.csv", mode="none")

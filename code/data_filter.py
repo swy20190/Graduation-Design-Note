@@ -63,3 +63,5 @@ def pure(srcName, targetName):
 
 pure("data/ADLRaw.csv", "data/ADLPure.csv")
 pure("data/FallRaw.csv", "data/FallPure.csv")
+pure("data/ADLRawTest.csv", "data/ADLPureTest.csv")
+pure("data/FallRawTest.csv", "data/FallPureTest.csv")
