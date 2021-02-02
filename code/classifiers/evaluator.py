@@ -19,10 +19,6 @@ def roc_drawer(features=None, normalized_mode="thigh_len"):
                     '11x', '11y', '12x', '12y']
 
     # read set
-    ADL_train = None
-    Fall_train = None
-    ADL_test = None
-    Fall_test = None
     if normalized_mode == "thigh_len":
         ADL_train = pd.read_csv("../data/normalized/ADLNormThigh.csv", index_col=0)
         Fall_train = pd.read_csv("../data/normalized/FallNormThigh.csv", index_col=0)
@@ -81,13 +77,19 @@ def roc_drawer(features=None, normalized_mode="thigh_len"):
     return fpr, tpr
 
 
-fpr, tpr = roc_drawer()
+fpr_thigh, tpr_thigh = roc_drawer(normalized_mode="thigh_len")
+fpr_torso, tpr_torso = roc_drawer(normalized_mode="torso_box")
+fpr_none, tpr_none = roc_drawer(normalized_mode="none")
 
-plt.plot(fpr, tpr)
+plt.plot(fpr_thigh, tpr_thigh, color='cyan', label='thigh')
+plt.plot(fpr_torso, tpr_torso, color='red', label='torso')
+plt.plot(fpr_none, tpr_none, color='magenta', label='none')
+plt.legend()
 plt.xlim([0.0, 1.05])
 plt.ylim([0.0, 1.05])
 plt.title('ROC curve for fall detection classifier')
 plt.xlabel('False Positive Rate (1 - Specificity)')
 plt.ylabel('True Positive Rate (Sensitivity)')
 plt.grid(True)
+plt.savefig("../output/roc_curves.png")
 plt.show()
