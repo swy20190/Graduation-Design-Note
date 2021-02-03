@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import roc_curve
+from sklearn.metrics import confusion_matrix
 
 from matplotlib import pyplot as plt
 
@@ -12,7 +13,7 @@ def roc_drawer(features=None, normalized_mode="thigh_len"):
     this function generates the plot for roc curve, models are svm based on different normalized data
     :param features: features chosen to train the model
     :param normalized_mode: how the data is normalized, e.g. "thigh_len"
-    :return: plot TP rate, FP rate
+    :return: plot TP rate, FP rate, confusion matrix
     """
     if features is None:
         features = ['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '5x', '5y', '6x', '6y', '8x', '8y', '9x', '9y',
@@ -74,22 +75,60 @@ def roc_drawer(features=None, normalized_mode="thigh_len"):
     scores = svc.decision_function(test_set)
     fpr, tpr, thresholds = roc_curve(test_label, scores)
 
-    return fpr, tpr
+    label_pred = svc.predict(training_set)
+    metric = confusion_matrix(training_label, label_pred)
+
+    return fpr, tpr, metric
 
 
-fpr_thigh, tpr_thigh = roc_drawer(normalized_mode="thigh_len")
-fpr_torso, tpr_torso = roc_drawer(normalized_mode="torso_box")
-fpr_none, tpr_none = roc_drawer(normalized_mode="none")
+def confusion_metric_drawer(metric_array, plt_name):
+    TP = metric_array[1][1]
+    FP = metric_array[0][1]
+    FN = metric_array[1][0]
+    TN = metric_array[0][0]
 
+    accuracy = (TP + TN) / (TP + TN + FP + FN)
+    precision = TP / (TP + FP)
+    recall = TP / (TP + FN)
+
+    fig, ax = plt.subplots(figsize=(3.5, 6))
+    ax.matshow(metric_array, cmap=plt.cm.Blues, alpha=0.3)
+    for i in range(metric_array.shape[0]):
+        for j in range(metric_array.shape[1]):
+            ax.text(x=j, y=i, s=metric_array[i, j], va='center', ha='center')
+    plt.xlabel('predicted label')
+    plt.ylabel('true label')
+    font = {'color': 'red',
+            'size': 10,
+            'family': 'Times New Roman', }
+    plt.text(-0.5, -1.5, 'Precision: '+str(precision), fontdict=font)
+    plt.text(-0.5, -1, 'Recall: '+str(recall), fontdict=font)
+
+    plt.savefig(plt_name)
+    plt.show()
+    plt.cla()
+
+
+fpr_thigh, tpr_thigh, metric_thigh = roc_drawer(normalized_mode="thigh_len")
+fpr_torso, tpr_torso, metric_torso = roc_drawer(normalized_mode="torso_box")
+fpr_none, tpr_none, metric_none = roc_drawer(normalized_mode="none")
+
+# draw roc curve
 plt.plot(fpr_thigh, tpr_thigh, color='cyan', label='thigh')
 plt.plot(fpr_torso, tpr_torso, color='red', label='torso')
 plt.plot(fpr_none, tpr_none, color='magenta', label='none')
 plt.legend()
 plt.xlim([0.0, 1.05])
 plt.ylim([0.0, 1.05])
-plt.title('ROC curve for fall detection classifier')
+plt.title('ROC curves for fall detection classifier')
 plt.xlabel('False Positive Rate (1 - Specificity)')
 plt.ylabel('True Positive Rate (Sensitivity)')
 plt.grid(True)
 plt.savefig("../output/roc_curves.png")
 plt.show()
+plt.cla()
+
+# draw confusion matrix
+confusion_metric_drawer(metric_thigh, "../output/metric_thigh.png")
+confusion_metric_drawer(metric_torso, "../output/metric_torso.png")
+confusion_metric_drawer(metric_none, "../output/metric_none.png")
