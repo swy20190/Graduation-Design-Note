@@ -75,8 +75,8 @@ def roc_drawer(features=None, normalized_mode="thigh_len"):
     scores = svc.decision_function(test_set)
     fpr, tpr, thresholds = roc_curve(test_label, scores)
 
-    label_pred = svc.predict(training_set)
-    metric = confusion_matrix(training_label, label_pred)
+    label_pred = svc.predict(test_set)
+    metric = confusion_matrix(test_label, label_pred)
 
     return fpr, tpr, metric
 
