@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import confusion_matrix
+from novelty_detection import confusion_metric_drawer_novelty
 
 # generate training set
 ADL_train_df = pd.read_csv("../data/normalized/ADLNormThigh.csv")
@@ -43,6 +44,4 @@ clf_ITree = IsolationForest(max_samples=512, max_features=10)
 clf_ITree.fit(training_set)
 predict_label = clf_ITree.predict(test_set)
 metric_ITree = confusion_matrix(test_label, predict_label)
-print("Metric for Isolation Tree: ")
-print(metric_ITree)
-
+confusion_metric_drawer_novelty(metric_ITree, "../output/metric_thigh_ITree.png")
