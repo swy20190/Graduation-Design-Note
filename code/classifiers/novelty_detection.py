@@ -3,6 +3,35 @@ import numpy as np
 import pandas as pd
 from sklearn import svm
 from sklearn.metrics import confusion_matrix
+from matplotlib import pyplot as plt
+
+
+def confusion_metric_drawer_novelty(metric_array, plt_name):
+    TP = metric_array[0][0]
+    FP = metric_array[1][0]
+    FN = metric_array[0][1]
+    TN = metric_array[1][1]
+
+    precision = TP / (TP + FP)
+    recall = TP / (TP + FN)
+
+    fig, ax = plt.subplots(figsize=(3.5, 6))
+    ax.matshow(metric_array, cmap=plt.cm.Blues, alpha=0.3)
+    for i in range(metric_array.shape[0]):
+        for j in range(metric_array.shape[1]):
+            ax.text(x=j, y=i, s=metric_array[i, j], va='center', ha='center')
+    plt.xlabel('predicted label')
+    plt.ylabel('true label')
+    font = {'color': 'red',
+            'size': 10,
+            'family': 'Times New Roman', }
+    plt.text(-0.5, -1.5, 'Precision: '+str(precision), fontdict=font)
+    plt.text(-0.5, -1, 'Recall: '+str(recall), fontdict=font)
+
+    plt.savefig(plt_name)
+    plt.show()
+    plt.cla()
+
 
 # generate training set
 # note: all the training set must be ADL
@@ -44,3 +73,4 @@ metric = confusion_matrix(test_label, predict_label)
 print("Metric for OC-SVM: ")
 print(metric)
 
+confusion_metric_drawer_novelty(metric, "../output/metric_thigh_OCSVM.png")
