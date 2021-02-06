@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import confusion_matrix
+from sklearn.covariance import EllipticEnvelope
 from novelty_detection import confusion_metric_drawer_novelty
+
 
 # generate training set
 ADL_train_df = pd.read_csv("../data/normalized/ADLNormThigh.csv")
@@ -45,3 +47,10 @@ clf_ITree.fit(training_set)
 predict_label = clf_ITree.predict(test_set)
 metric_ITree = confusion_matrix(test_label, predict_label)
 confusion_metric_drawer_novelty(metric_ITree, "../output/metric_thigh_ITree.png")
+
+# Fitting an elliptic envelope
+clf_EEnvelope = EllipticEnvelope(contamination=0.05)
+clf_EEnvelope.fit(training_set)
+predict_label = clf_EEnvelope.predict(test_set)
+metric_EEnvelope = confusion_matrix(test_label, predict_label)
+confusion_metric_drawer_novelty(metric_EEnvelope, "../output/metric_thigh_EEnvelope.png")

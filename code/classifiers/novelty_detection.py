@@ -70,7 +70,4 @@ test_data = ADLTest_data + FallTest_data
 predict_label = clf.predict(test_data)
 metric = confusion_matrix(test_label, predict_label)
 
-print("Metric for OC-SVM: ")
-print(metric)
-
 confusion_metric_drawer_novelty(metric, "../output/metric_thigh_OCSVM.png")
