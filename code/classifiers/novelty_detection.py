@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import svm
+from sklearn.neighbors import LocalOutlierFactor
 from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
 
@@ -41,10 +42,6 @@ training_df = ADL_df[['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '5x', '5y'
                       '11x', '11y', '12x', '12y']]
 training_data = np.array(training_df).tolist()
 
-# fit the model
-clf = svm.OneClassSVM(kernel='rbf', nu=0.01)
-clf.fit(training_data)
-
 # generate the test set
 ADLTest_df = pd.read_csv("../data/normalized/ADLNormThighTest.csv")
 ADLTest_df = ADLTest_df[['0x', '0y', '1x', '1y', '2x', '2y', '3x', '3y', '5x', '5y', '6x', '6y', '8x', '8y', '9x', '9y',
@@ -67,7 +64,18 @@ for i in range(num_novel):
 
 test_data = ADLTest_data + FallTest_data
 
-predict_label = clf.predict(test_data)
+# fit the model (OCSVM)
+clf_OCSVM = svm.OneClassSVM(kernel='rbf', nu=0.01)
+clf_OCSVM.fit(training_data)
+predict_label = clf_OCSVM.predict(test_data)
 metric = confusion_matrix(test_label, predict_label)
 
 confusion_metric_drawer_novelty(metric, "../output/metric_thigh_OCSVM.png")
+
+# fit the model (LOF)
+clf_lof = LocalOutlierFactor(novelty=True)
+clf_lof.fit(training_data)
+predict_label = clf_lof.predict(test_data)
+metric = confusion_matrix(test_label, predict_label)
+
+confusion_metric_drawer_novelty(metric, "../output/metric_thigh_LOF.png")
