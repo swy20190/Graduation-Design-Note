@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import confusion_matrix
 from sklearn.covariance import EllipticEnvelope
+from sklearn.neighbors import LocalOutlierFactor
 from novelty_detection import confusion_metric_drawer_novelty
 
 
@@ -54,3 +55,9 @@ clf_EEnvelope.fit(training_set)
 predict_label = clf_EEnvelope.predict(test_set)
 metric_EEnvelope = confusion_matrix(test_label, predict_label)
 confusion_metric_drawer_novelty(metric_EEnvelope, "../output/metric_thigh_EEnvelope.png")
+
+# local outlier factor
+clf_LOF = LocalOutlierFactor(contamination=0.12)
+predict_label = clf_LOF.fit_predict(test_set)
+metric_LOF = confusion_matrix(test_label, predict_label)
+confusion_metric_drawer_novelty(metric_LOF, "../output/metric_thigh_LOF_o.png")
