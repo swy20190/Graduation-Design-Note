@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix
+from evaluator import confusion_metric_drawer
 
 # generate training set
 ADL_training_df = pd.read_csv("../data/normalized/ADLNormThigh.csv")
@@ -53,3 +55,9 @@ if find_k_flag == "y":
     plt.xlabel('Value of K for KNN')
     plt.ylabel('Error')
     plt.show()
+
+clf_knn = KNeighborsClassifier(n_neighbors=1)
+clf_knn.fit(training_data, training_label)
+predict_label = clf_knn.predict(test_data)
+metric_knn = confusion_matrix(test_label, predict_label)
+confusion_metric_drawer(metric_knn, "../output/metric_thigh_KNN.png")
