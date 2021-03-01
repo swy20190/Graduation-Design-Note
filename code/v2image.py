@@ -30,4 +30,14 @@ def v2image(video_path, seq_path):
     cap.release()
 
 
-v2image('video (1).avi', 'test_img_seq')
+# v2image('video (1).avi', 'test_img_seq')
+
+img_base_Path = 'img_seq'
+# Coffee Room 01
+videoPath = 'G:\毕业设计\FallDataset\Coffee_room_01\Coffee_room_01\Videos'
+fileList = os.listdir(videoPath)
+video_cnt = len(fileList)
+for i in range(video_cnt):
+    v_name = videoPath + '\\' + 'video (' + str(i+1) + ').avi'
+    seq_name = img_base_Path + '\\' + 'CoffeeRoom01' + '\\' + 'video' + str(i+1)
+    v2image(v_name, seq_name)
