@@ -30,14 +30,24 @@ def v2image(video_path, seq_path):
     cap.release()
 
 
-# v2image('video (1).avi', 'test_img_seq')
+def v_processor(videoPath, framePath, bias):
+    """
 
-img_base_Path = 'img_seq'
-# Coffee Room 01
-videoPath = 'G:\毕业设计\FallDataset\Coffee_room_01\Coffee_room_01\Videos'
-fileList = os.listdir(videoPath)
-video_cnt = len(fileList)
-for i in range(video_cnt):
-    v_name = videoPath + '\\' + 'video (' + str(i+1) + ').avi'
-    seq_name = img_base_Path + '\\' + 'CoffeeRoom01' + '\\' + 'video' + str(i+1)
-    v2image(v_name, seq_name)
+    :param bias:
+    :param videoPath:
+    :param framePath:
+    :return: none
+    """
+    img_base_Path = 'img_seq'
+    fileList = os.listdir(videoPath)
+    video_cnt = len(fileList)
+    for i in range(video_cnt):
+        v_name = videoPath + '\\' + 'video (' + str(i+bias) + ').avi'
+        seq_name = img_base_Path + '\\' + framePath + '\\' + 'video' + str(i+1)
+        v2image(v_name, seq_name)
+
+
+video_path = input("Please enter the path of video sets:")
+frame_path = input("Please enter the target path of frame sets:")
+cnt_bias = int(input("Please enter the bias:"))
+v_processor(video_path, frame_path, cnt_bias)
