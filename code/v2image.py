@@ -47,7 +47,7 @@ def v_processor(videoPath, framePath, bias):
         v2image(v_name, seq_name)
 
 
-video_path = input("Please enter the path of video sets:")
+v_path = input("Please enter the path of video sets:")
 frame_path = input("Please enter the target path of frame sets:")
 cnt_bias = int(input("Please enter the bias:"))
-v_processor(video_path, frame_path, cnt_bias)
+v_processor(v_path, frame_path, cnt_bias)
