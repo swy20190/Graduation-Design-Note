@@ -3,11 +3,11 @@ import os
 import cv2
 
 
-seq_path = 'G:\Graduation-Design-Note\code\img_seq\CoffeeRoom01\\video3'
-target_path = 'clips'
+seq_path = input("Please enter the img_seq path:")
+target_path = input("Please enter the target path:")
 img_cnt = len(os.listdir(seq_path))
-src_bias = 44
-target_bias = 1
+src_bias = int(input("Please enter the src index bias"))
+target_bias = int(input("Please enter the start index of target"))
 
 for i in range(img_cnt):
     if i + 21 + src_bias > img_cnt:
