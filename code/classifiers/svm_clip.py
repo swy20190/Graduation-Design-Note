@@ -4,7 +4,7 @@ import numpy as np
 from sklearn import svm
 from sklearn.model_selection import cross_val_score
 
-clipData = pd.read_csv('../data/clipPureTrain.csv', index_col=0)
+clipData = pd.read_csv('../data/clipTrainPure.csv', index_col=0)
 
 clipData.dropna(inplace=True)
 print(len(clipData))
